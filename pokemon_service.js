@@ -10,7 +10,7 @@ module.exports = class PokemonService {
    * @param {Number} (version)
    */
   constructor(version) {
-    this.url = `pokeapi.co/api/v/${version || 2}`;
+    this.url = `pokeapi.co/api/v${version || 2}`;
     this.errors = {
       NO_POKEMON_BY_ID: (id) => {
         return new Error(`no pokemon with id ${id}`)
@@ -40,7 +40,7 @@ module.exports = class PokemonService {
       try {
         body = JSON.parse(body);
       } catch (parseErr) {
-        callback(parseErr);
+        callback(this.errors.NO_POKEMON_BY_ID(id));
         return;
       }
       callback(null, body);
@@ -61,7 +61,7 @@ module.exports = class PokemonService {
       try {
         body = JSON.parse(body);
       } catch (parseErr) {
-        return parseErr;
+        return this.errors.NO_POKEMON_BY_ID(id);
       }
       return body;
     });
@@ -84,7 +84,7 @@ module.exports = class PokemonService {
       try {
         body = JSON.parse(body);
       } catch (parseErr) {
-        callback(parseErr);
+        callback(this.errors.NO_ABILITY(abilityUrl));
         return;
       }
       callback(null, body);
@@ -100,7 +100,7 @@ module.exports = class PokemonService {
         try {
           body = JSON.parse(body);
         } catch (parseErr) {
-          return parseErr;
+          return this.errors.NO_ABILITY(abilityUrl);
         }
         return body;
       });
