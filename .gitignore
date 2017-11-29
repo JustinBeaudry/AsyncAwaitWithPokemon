@@ -1,0 +1,25 @@
+npm-debug.log*
+/node_modules
+/templates
+/docs
+
+# artifacts
+/artifacts
+.DS_Store
+.svn
+*~
+*.swp
+*.rbc
+
+# sublime config
+*.sublime-project
+*.sublime-workspace
+
+# webstorm
+.idea
+
+npm-debug.log
+newrelic_agent.log
+
+# etcd
+*.etcd
