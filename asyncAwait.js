@@ -3,6 +3,7 @@
 const PokemonService = require('./pokemon_service');
 const pokemonService = new PokemonService();
 const args = require('minimist')(process.argv.slice(2));
+const pokemonId = (args.p || args.pokemon || 1);
 
 if (args.s || args.simple) {
   simple();
@@ -15,7 +16,7 @@ async function simple() {
   console.time('simple');
   let pokemon;
   try {
-    pokemon = await pokemonService.getByIdAsync(1);
+    pokemon = await pokemonService.getByIdAsync(pokemonId);
     delete pokemon.moves;
     delete pokemon.game_indices;
   } catch (err) {
@@ -29,14 +30,14 @@ async function advanced() {
   console.time('advanced');
   let pokemon;
   try {
-    pokemon = await pokemonService.getByIdAsync(1);
+    pokemon = await pokemonService.getByIdAsync(pokemonId);
     delete pokemon.moves;
     delete pokemon.game_indices;
   } catch (err) {
     throw err;
   }
   let abilityRequests = pokemon.abilities.map(ability => {
-    return pokemonService.getPokemonAbilityPromise(ability.ability.url);
+    return pokemonService.getAbilityPromise(ability.ability.url);
   });
   let abilities;
   try {

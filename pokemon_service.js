@@ -5,8 +5,12 @@ const requestPromise = require('request-promise-native');
 const path = require('path');
 
 module.exports = class PokemonService {
-  constructor() {
-    this.url = 'pokeapi.co/api/v2/';
+  /**
+   *
+   * @param {Number} (version)
+   */
+  constructor(version) {
+    this.url = `pokeapi.co/api/v/${version || 2}`;
     this.errors = {
       NO_POKEMON_BY_ID: (id) => {
         return new Error(`no pokemon with id ${id}`)
@@ -17,6 +21,12 @@ module.exports = class PokemonService {
     }
   }
 
+  /**
+   *
+   * @param {Number} id
+   * @param {Function} callback
+   * @callback callback
+   */
   getByIdCallback(id, callback) {
     request.get('https://' + path.join(this.url, 'pokemon', id.toString()), (err, response, body) => {
       if (err) {
@@ -37,6 +47,11 @@ module.exports = class PokemonService {
     });
   }
 
+  /**
+   *
+   * @param {Number} id
+   * @returns {PromiseLike<T> | Promise<T>}
+   */
   getByIdPromise(id) {
     return requestPromise.get('https://' + path.join(this.url, 'pokemon', id.toString()))
     .then(body => {
@@ -56,7 +71,7 @@ module.exports = class PokemonService {
     return this.getByIdPromise(id);
   }
 
-  getPokemonAbilityCallback(abilityUrl, callback) {
+  getAbilityCallback(abilityUrl, callback) {
     request.get(abilityUrl, (err, response, body) => {
       if (err) {
         callback(err);
@@ -76,7 +91,7 @@ module.exports = class PokemonService {
     });
   }
 
-  getPokemonAbilityPromise(abilityUrl) {
+  getAbilityPromise(abilityUrl) {
     return requestPromise.get(abilityUrl)
       .then(body => {
         if (!body) {
